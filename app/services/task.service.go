@@ -32,9 +32,15 @@ func NewTaskService(db *gorm.DB) TaskService {
 func (ts *taskService) GetAllTasks(ctx *gin.Context) (dto.TaskListResponse, *utils.ServiceError) {
 	var tasks []models.Task
 	intPage, intLimit, offset, sortKey, sortOrder := utils.GetRequestPaginationData(ctx)
+	query, args := utils.DynamicFilterTasks(ctx)
+
+	if len(query) == 0 {
+		query = "1 = 1"
+		args = []interface{}{}
+	}
 
 	// Finds all users
-	findError := ts.db.Model(models.Task{}).Limit(intLimit).Offset(offset).Order(fmt.Sprintf("%s %s", sortKey, sortOrder)).Find(&tasks)
+	findError := ts.db.Where(query, args...).Limit(intLimit).Offset(offset).Order(fmt.Sprintf("%s %s", sortKey, sortOrder)).Find(&tasks)
 	if findError.Error != nil {
 		return dto.TaskListResponse{}, &utils.ServiceError{Code: http.StatusInternalServerError, Message: constants.FindTaskError, InternalErrorMessage: findError.Error.Error()}
 	}
@@ -50,9 +56,15 @@ func (ts *taskService) GetAllUserTasks(ctx *gin.Context) (dto.TaskListResponse, 
 	var tasks []models.Task
 	userId := ctx.MustGet("UserID").(string)
 	intPage, intLimit, offset, sortKey, sortOrder := utils.GetRequestPaginationData(ctx)
+	query, args := utils.DynamicFilterTasks(ctx)
+
+	if len(query) == 0 {
+		query = "1 = 1"
+		args = []interface{}{}
+	}
 
 	// Finds all users
-	findError := ts.db.Where("user_id = ?", userId).Limit(intLimit).Offset(offset).Order(fmt.Sprintf("%s %s", sortKey, sortOrder)).Find(&tasks)
+	findError := ts.db.Where(fmt.Sprintf("%s AND user_id = ?", query), append(args, userId)...).Limit(intLimit).Offset(offset).Order(fmt.Sprintf("%s %s", sortKey, sortOrder)).Find(&tasks)
 	if findError.Error != nil {
 		return dto.TaskListResponse{}, &utils.ServiceError{Code: http.StatusInternalServerError, Message: constants.FindTaskError, InternalErrorMessage: findError.Error.Error()}
 	}

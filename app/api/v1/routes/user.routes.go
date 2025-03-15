@@ -13,11 +13,11 @@ type UserRouteController struct {
 }
 
 func (urc *UserRouteController) UserRoutes(rg *gin.RouterGroup) {
-	router := rg.Group("/v1/user")
+	router := rg.Group("/v1/users")
 	router.POST("/register", urc.UserController.Register)
 	router.POST("/login", urc.UserController.Login)
 
-	authRouter := rg.Group("/v1/auth/user")
+	authRouter := rg.Group("/v1/auth/users")
 	authRouter.Use(middlewares.Authenticate(urc.JwtService, "user"))
 	authRouter.GET("/", urc.UserController.GetAllUsers)
 	authRouter.GET("/me", urc.UserController.Me)

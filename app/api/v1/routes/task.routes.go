@@ -13,7 +13,7 @@ type TaskRouteController struct {
 }
 
 func (trc *TaskRouteController) UserRoutes(rg *gin.RouterGroup) {
-	authRouter := rg.Group("/v1/auth/task")
+	authRouter := rg.Group("/v1/auth/tasks")
 	authRouter.Use(middlewares.Authenticate(trc.JwtService, "user"))
 	authRouter.GET("/", trc.TaskController.GetAllTasks)
 	authRouter.GET("/:taskId", trc.TaskController.GetTaskById)

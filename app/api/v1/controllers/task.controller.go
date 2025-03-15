@@ -20,7 +20,7 @@ type TaskController struct {
 }
 
 func (tc *TaskController) GetAllTasks(ctx *gin.Context) {
-	tasks, serviceErr := tc.TaskService.GetAllTasks(ctx)
+	tasks, serviceErr := tc.TaskService.GetAllUserTasks(ctx)
 	if serviceErr != nil {
 		log.Println(serviceErr.LogMessage())
 		ctx.JSON(serviceErr.Code, interfaces.CreateFailResponse(serviceErr.Message, serviceErr.InternalErrorMessage, uint(serviceErr.Code)))

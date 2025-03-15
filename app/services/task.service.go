@@ -19,6 +19,7 @@ type taskService struct {
 
 type TaskService interface {
 	GetAllTasks(ctx *gin.Context) (dto.TaskListResponse, *utils.ServiceError)
+	GetAllUserTasks(ctx *gin.Context) (dto.TaskListResponse, *utils.ServiceError)
 	GetTaskById(ctx *gin.Context, id uint) (dto.TaskResponse, *utils.ServiceError)
 	CreateNewTask(ctx *gin.Context, rawPayload json.RawMessage) (dto.TaskResponse, *utils.ServiceError)
 	UpdateTask(ctx *gin.Context, id uint, rawPayload json.RawMessage) (dto.TaskResponse, *utils.ServiceError)

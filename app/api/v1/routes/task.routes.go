@@ -12,7 +12,7 @@ type TaskRouteController struct {
 	JwtService     services.JWTService
 }
 
-func (trc *TaskRouteController) UserRoutes(rg *gin.RouterGroup) {
+func (trc *TaskRouteController) TaskRoutes(rg *gin.RouterGroup) {
 	authRouter := rg.Group("/v1/auth/tasks")
 	authRouter.Use(middlewares.Authenticate(trc.JwtService, "user"))
 	authRouter.GET("/", trc.TaskController.GetAllTasks)

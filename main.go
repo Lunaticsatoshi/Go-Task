@@ -86,7 +86,7 @@ func main() {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	UserRouteController.UserRoutes(router)
-	TaskRouteController.UserRoutes(router)
+	TaskRouteController.TaskRoutes(router)
 
 	server.Run(":8080")
 }

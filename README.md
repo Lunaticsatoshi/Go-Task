@@ -35,4 +35,5 @@ A simple task management api built using Golang, Gin and GORM with simple and cl
 ## How to Run?
 
 1. Use the command `make tidy` to adjust the dependencies accordingly
+2. Seed the data using the command `go run ./database/seed.go `
 2. Use the command `air` to run the application

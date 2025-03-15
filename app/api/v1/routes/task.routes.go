@@ -19,4 +19,5 @@ func (trc *TaskRouteController) TaskRoutes(rg *gin.RouterGroup) {
 	authRouter.GET("/:taskId", trc.TaskController.GetTaskById)
 	authRouter.POST("/", trc.TaskController.CreateTask)
 	authRouter.PUT("/:taskId", trc.TaskController.UpdateTask)
+	authRouter.DELETE("/:taskId", trc.TaskController.DeleteTask)
 }

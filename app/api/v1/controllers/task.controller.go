@@ -78,3 +78,14 @@ func (tc *TaskController) UpdateTask(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, interfaces.CreateSuccessResponse(constants.TaskUpdatedSuccessfully, http.StatusCreated, task))
 }
+
+func (tc *TaskController) DeleteTask(ctx *gin.Context) {
+	id := ctx.Param("taskId")
+	serviceErr := tc.TaskService.DeleteTask(ctx, utils.ConvertStringToUInt(id))
+	if serviceErr != nil {
+		log.Println(serviceErr.LogMessage())
+		ctx.JSON(serviceErr.Code, interfaces.CreateFailResponse(serviceErr.Message, serviceErr.InternalErrorMessage, uint(serviceErr.Code)))
+		return
+	}
+	ctx.JSON(http.StatusCreated, interfaces.CreateSuccessResponse(constants.TaskDeletedSuccessfully, http.StatusCreated, true))
+}

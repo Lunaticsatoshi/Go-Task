@@ -23,6 +23,7 @@ type TaskService interface {
 	GetTaskById(ctx *gin.Context, id uint) (dto.TaskResponse, *utils.ServiceError)
 	CreateNewTask(ctx *gin.Context, rawPayload json.RawMessage) (dto.TaskResponse, *utils.ServiceError)
 	UpdateTask(ctx *gin.Context, id uint, rawPayload json.RawMessage) (dto.TaskResponse, *utils.ServiceError)
+	DeleteTask(ctx *gin.Context, id uint) *utils.ServiceError
 }
 
 func NewTaskService(db *gorm.DB) TaskService {
@@ -146,4 +147,14 @@ func (ts *taskService) UpdateTask(ctx *gin.Context, id uint, rawPayload json.Raw
 		Description: task.Description,
 		Status:      task.Status,
 	}, nil
+}
+
+func (ts *taskService) DeleteTask(ctx *gin.Context, id uint) *utils.ServiceError {
+	userId := ctx.MustGet("UserID").(string)
+	// Delete a task
+	deleteError := ts.db.Where(models.Task{ID: id, UserId: utils.ConvertStringToUInt(userId)}).Delete(&models.Task{})
+	if deleteError.Error != nil {
+		return &utils.ServiceError{Code: http.StatusInternalServerError, Message: constants.DeleteTaskError, InternalErrorMessage: deleteError.Error.Error(), Payload: utils.ConvertIntToString(int(id))}
+	}
+	return nil
 }

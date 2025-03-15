@@ -11,6 +11,10 @@ const (
 	CreateUserError         = "Error creating user"
 	UpdateUserError         = "Error updating user"
 	DeleteUserError         = "Error deleting user"
+	FindTaskError           = "Error finding task"
+	CreateTaskError         = "Error creating task"
+	UpdateTaskError         = "Error updating task"
+	DeleteTaskError         = "Error deleting task"
 )
 
 const (
@@ -18,4 +22,8 @@ const (
 	UserCreatedSuccessfully = "User created successfully"
 	UserUpdatedSuccessfully = "User updated successfully"
 	UserDeletedSuccessfully = "User deleted successfully"
+	TaskFetchedSuccessfully = "Task fetched successfully"
+	TaskCreatedSuccessfully = "Task created successfully"
+	TaskUpdatedSuccessfully = "Task updated successfully"
+	TaskDeletedSuccessfully = "Task deleted successfully"
 )

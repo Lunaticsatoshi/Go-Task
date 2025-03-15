@@ -6,4 +6,10 @@ const (
 
 	DBAttrID    = "id"
 	DBAttrEmail = "email"
+
+	EnumStatusPending   = "pending"
+	EnumStatusStarted   = "in-progress"
+	EnumStatusInReview  = "in-review"
+	EnumStatusCompleted = "completed"
+	EnumStatusDeleted   = "deleted"
 )

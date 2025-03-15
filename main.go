@@ -9,7 +9,7 @@ import (
 	"github.com/Lunaticsatoshi/go-task/app/api/v1/routes"
 	"github.com/Lunaticsatoshi/go-task/app/common/middlewares"
 	"github.com/Lunaticsatoshi/go-task/app/services"
-	"github.com/Lunaticsatoshi/go-task/docs"
+	docs "github.com/Lunaticsatoshi/go-task/docs"
 	"github.com/Lunaticsatoshi/go-task/initializers"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -21,6 +21,8 @@ var (
 	server              *gin.Engine
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
+	TaskController      controllers.TaskController
+	TaskRouteController routes.TaskRouteController
 )
 
 func init() {
@@ -37,7 +39,16 @@ func init() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	// Swagger 2.0 Meta Information
+	docs.SwaggerInfo.Title = "GO Task"
+	docs.SwaggerInfo.Description = "An Go based Api for Task Management"
+	docs.SwaggerInfo.Version = os.Getenv("SWAGGER_VERSION")
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/api/v1/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	userService := services.NewUserService(initializers.DB)
+	taskService := services.NewTaskService(initializers.DB)
 	jwtService := services.NewJWTService()
 	UserController = controllers.UserController{
 		DB:          initializers.DB,
@@ -46,6 +57,14 @@ func init() {
 	}
 	UserRouteController = routes.UserRouteController{
 		UserController: UserController,
+		JwtService:     jwtService,
+	}
+	TaskController = controllers.TaskController{
+		DB:          initializers.DB,
+		TaskService: taskService,
+	}
+	TaskRouteController = routes.TaskRouteController{
+		TaskController: TaskController,
 		JwtService:     jwtService,
 	}
 
@@ -57,13 +76,6 @@ func init() {
 }
 
 func main() {
-	// Swagger 2.0 Meta Information
-	docs.SwaggerInfo.Title = "GO Task"
-	docs.SwaggerInfo.Description = "An Go based Api for Task Management"
-	docs.SwaggerInfo.Version = os.Getenv("SWAGGER_VERSION")
-	docs.SwaggerInfo.Host = os.Getenv("SWAGGER_URL")
-	docs.SwaggerInfo.BasePath = ""
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	router := server.Group("/api")
 
 	router.GET("/health", func(c *gin.Context) {
@@ -74,6 +86,7 @@ func main() {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	UserRouteController.UserRoutes(router)
+	TaskRouteController.UserRoutes(router)
 
 	server.Run(":8080")
 }

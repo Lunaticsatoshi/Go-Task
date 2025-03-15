@@ -1,0 +1,5 @@
+ALTER TABLE tasks ADD COLUMN user_id INTEGER DEFAULT NULL;
+
+ALTER TABLE tasks ADD CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id);
+
+CREATE INDEX IF NOT EXISTS idx_user_id ON tasks (user_id);

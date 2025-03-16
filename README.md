@@ -1,5 +1,5 @@
 # Go-task (Clean Architecture)
-A simple task management api built using Golang, Gin and GORM with simple and clean architecture
+A simple task management api built using Golang, Gin and GORM with simple and clean architecture. This system should allow users to create, read, update, and delete tasks. Users can also Filter tasks and get an paginated API to fetch all tasks. Have also built simple JWT Authentication to only allow valid users to create tasks.
 
 ## Architecture Explanation (EN)
 
@@ -36,4 +36,23 @@ A simple task management api built using Golang, Gin and GORM with simple and cl
 
 1. Use the command `make tidy` to adjust the dependencies accordingly
 2. Seed the data using the command `go run ./database/seed.go `
-2. Use the command `air` to run the application
+3. Use the command `air` to run the application
+4. Go to `localhost:8080/api/health` for testing endpoint
+5. Hit the `POST /api/v1/users/login` endpoint to login the users created from the seeder
+
+## API Endpoints
+1. Users
+    - POST /api/v1/users/register (Create a new user)
+    - POST /api/v1/users/login (Login as a user)
+    - GET /api/v1/auth/users/me (Get current logged in user)
+    - Get /api/v1/auth/users/:userId (Get a particular user)
+    - PUT /api/v1/auth/users/:userId (Update your user details)
+2. Tasks
+      - Get /api/v1/auth/tasks?p=1&limit=10&status="completed" (Get all tasks with pagination ans status filtering)
+      - GET /api/v1/auth/tasks/:taskId (Get a particular task)
+      - POST /api/v1/auth/tasks/ (Create a particular task)
+      - PUT /api/v1/auth/tasks/:taskId (Update a particular task)
+      - DELETE /api/v1/auth/tasks/:taskId (Delete a particular Task)
+
+## Microservices Or Not?
+  Currently we have started as an monolith following SOLID principles where we have services with each only having one responsibility. We have task service talking with Task Models performing only CRUD operations on Task. We have used dependency injection for making sure loose coupling between components. As we move to microservices we can break it into user and task services each handling their own functionalities respectively and effectively communication between each other maybe for authorization via REST API's or gRPC.
